@@ -1,0 +1,25 @@
+* {
+	padding: 0;
+	margin: 0;
+}
+
+body {
+	font-family: sans-serif;
+	text-align: center;
+}
+
+canvas {
+	display: block;
+	border: solid 2px #CCC;
+	margin: 0 auto;
+	position: relative;
+}
+
+.snake {
+	position: relative;
+}
+
+.score {	
+	padding: 10px 0;
+	font-size: 50px;
+}
