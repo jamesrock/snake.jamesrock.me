@@ -1,2 +1,3 @@
 # snake.jamesrock.me
-a modern take on a timeless classic
+
+an adaptation of the timeless game snake
