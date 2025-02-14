@@ -173,13 +173,17 @@
 		};
 		createFood() {
 
-			this.foods.push(new Food(this.getRandomX(), this.getRandomY()));
+			const {
+				x, y
+			} = this.getRandomXAndY();
+
+			this.foods.push(new Food(x, y));
 			return this;
 
 		};
 		move(x, y) {
 
-			console.log(`move(${x}, ${y})`);
+			// console.log(`move(${x}, ${y})`);
 			
 			var 
 			snake = this,
@@ -261,21 +265,34 @@
 			return Math.floor(Math.random() * ((max - this.size) / this.size));
 
 		};
-		getRandomX() {
+		getRandomXAndY() {
 
-			return this.getRandom(this.width);
+			let 
+			x = this.getRandom(this.width),
+			y = this.getRandom(this.height);
 
-		};
-		getRandomY() {
+			while(this.checkForSegment(`${x}${y}`)) {
+				x = this.getRandom(this.width);
+				y = this.getRandom(this.height);
+				console.log('segment clash');
+			};
 
-			return this.getRandom(this.height);
+			return {
+				x,
+				y
+			};
 
 		};
 		setGameOverScreen(visible) {
 
 			this.gameOverNode.setAttribute('data-active', visible);
 			return this;
-			
+
+		};
+		checkForSegment(toCheck) {
+
+			return this.segments.map((segment) => (`${segment.x}${segment.y}`)).some((value) => (toCheck===value));
+
 		};
 		width = 350;
 		height = 500;
@@ -301,13 +318,17 @@
 		'right': 'ArrowRight',
 		'down': 'ArrowDown'
 	},
+	directionsArray = ['ArrowLeft', 'ArrowUp', 'ArrowRight', 'ArrowDown'],
+	isValidKey = (key) => (directionsArray.some((direction) => (direction===key))),
 	snake = new Snake();
 
 	snake.renderTo(body);
 
 	document.addEventListener('keydown', function(e) {
-
-		return snake.turn(e.key);
+			
+		if(isValidKey(e.key)) {
+			return snake.turn(e.key);
+		};
 
 	});
 	document.addEventListener('touchstart', function(e) {
