@@ -25,31 +25,34 @@
 
 			this.node = document.createElement('div');
 			this.scoreNode = document.createElement('div');
+			this.gameOverNode = document.createElement('div');
 			this.canvas = document.createElement('canvas');
 			this.ctx = this.canvas.getContext('2d');
-			this.width = 350;
-			this.height = 500;
-			this.size = 10;
-			this.speed = 300;
-			this.increment = 5;
-			this.eaten = 0;
-			this.direction = directions.right;
-			this.segments = [];
-			this.foods = [];
 
 			this.node.classList.add('snake');
 			this.scoreNode.classList.add('score');
+
+			this.gameOverNode.classList.add('game-over');
 
 			this.canvas.width = this.width;
 			this.canvas.height = this.height;
 
 			this.node.appendChild(this.scoreNode);
 			this.node.appendChild(this.canvas);
+			this.node.appendChild(this.gameOverNode);
 
 			this.updateScore();
 
+			const _this = this;
+
+			this.gameOverNode.addEventListener('click', function() {
+				_this.start();
+			});
+
 		};
 		start() {
+
+			this.reset();
 
 			var
 			snake = this,
@@ -109,9 +112,8 @@
 			};
 
 			if(this.checkCollision(x, y)) {
-				if(confirm(`GAME OVER\nYou scored ${snake.eaten}. Press OK to try again.`)) {
-					snake.reset();
-				};
+				this.gameOverNode.innerHTML = `GAME OVER<br />You scored ${snake.eaten}.<br />Press to try again.`;
+				this.setGameOverScreen('true');
 				return;
 			};
 
@@ -176,6 +178,8 @@
 
 		};
 		move(x, y) {
+
+			console.log(`move(${x}, ${y})`);
 			
 			var 
 			snake = this,
@@ -232,8 +236,13 @@
 
 		};
 		reset() {
-
-			location.reload();
+			
+			this.eaten = 0;
+			this.direction = directions.right;
+			this.segments = [];
+			this.foods = [];
+			this.setGameOverScreen('false');
+			this.updateScore();
 			return this;
 
 		};
@@ -262,6 +271,21 @@
 			return this.getRandom(this.height);
 
 		};
+		setGameOverScreen(visible) {
+
+			this.gameOverNode.setAttribute('data-active', visible);
+			return this;
+			
+		};
+		width = 350;
+		height = 500;
+		size = 10;
+		speed = 300;
+		increment = 5;
+		eaten = 0;
+		direction = directions.right;
+		segments = [];
+		foods = [];
 	};
 
 	var 
