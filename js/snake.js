@@ -333,6 +333,7 @@
 		touchX = firstTouch.clientX;
 		touchY = firstTouch.clientY;
 
+		e.preventDefault();
 		return false;
 
 	});
@@ -359,11 +360,13 @@
 
 		snake.turn(direction);
 
+		e.preventDefault();
 		return false;
 
 	});
 	document.addEventListener('touchend', function(e) {
 
+		e.preventDefault();
 		return false;
 
 	});
