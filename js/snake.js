@@ -284,8 +284,6 @@
 
 	document.addEventListener('keydown', function(e) {
 
-		console.log(e);
-
 		return snake.turn(e.key);
 
 	});
