@@ -221,7 +221,7 @@
 		};
 		updateScore() {
 
-			this.scoreNode.innerHTML = this.eaten;
+			this.scoreNode.innerHTML = `score: ${this.eaten}`;
 			return this;
 
 		};
