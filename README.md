@@ -1,3 +1,3 @@
 # snake.jamesrock.me
 
-an adaptation of the timeless game snake
+vanilla JS adaptation of the timeless classic Snake
