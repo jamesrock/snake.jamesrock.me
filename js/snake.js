@@ -1,67 +1,55 @@
 (function() {
 
-	var 
-	body = document.body,
-	snake,
-	swipeThreshold = 30,
-	swipeThresholdInverse = (swipeThreshold*-1),
-	touchX,
-	touchY,
-	directions = {
-		left: 37,
-		up: 38,
-		right: 39,
-		down: 40,
-		rotate: 32
-	},
-	Food = ROCK.Object.extend({
-		constructor: function Food(x, y) {
+	class Food {
+		constructor(x, y) {
 
 			this.x = x;
 			this.y = y;
 
-		},
-		color: "grey"
-	}),
-	Segment = ROCK.Object.extend({
-		constructor: function Segment(x, y) {
+		};
+		color = 'grey';
+	};
+	
+	class Segment {
+		constructor(x, y) {
 
 			this.x = x;
 			this.y = y;
 
-		},
-		color: "black"
-	}),
-	Snake = ROCK.Object.extend({
-		constructor: function Snake() {
+		};
+		color = 'black'
+	};
 
-			this.node = ROCK.DOM.createNode("div");
-			this.scoreNode = ROCK.DOM.createNode("div");
-			this.canvas = document.createElement("canvas");
-			this.ctx = this.canvas.getContext("2d");
+	class Snake {
+		constructor() {
+
+			this.node = document.createElement('div');
+			this.scoreNode = document.createElement('div');
+			this.canvas = document.createElement('canvas');
+			this.ctx = this.canvas.getContext('2d');
 			this.width = 350;
 			this.height = 500;
-			this.level = 1;
 			this.size = 10;
-			this.speed = 280;
+			this.speed = 300;
+			this.increment = 5;
 			this.eaten = 0;
 			this.direction = directions.right;
 			this.segments = [];
 			this.foods = [];
 
-			ROCK.DOM.addClass(this.node, "snake");
-			ROCK.DOM.addClass(this.scoreNode, "score");
+			this.node.classList.add('snake');
+			this.scoreNode.classList.add('score');
 
 			this.canvas.width = this.width;
 			this.canvas.height = this.height;
 
-			ROCK.DOM.append(this.scoreNode, this.node);
-			ROCK.DOM.append(this.canvas, this.node);
+			this.node.appendChild(this.scoreNode);
+			this.node.appendChild(this.canvas);
 
 			this.updateScore();
 
-		},
-		start: function() {
+		};
+		start() {
 
 			var
 			snake = this,
@@ -75,51 +63,53 @@
 
 			snake.draw();
 
-		},
-		draw: function() {
+		};
+		draw() {
 
 			var
 			snake = this;
 
 			snake.canvas.width = snake.width;
-			
-			ROCK.ARRAY.each(snake.segments, function(seg) {
+
+			snake.segments.forEach(function(seg) {
 				snake.ctx.fillStyle = seg.color;
 				snake.ctx.fillRect(snake.inflate(seg.x), snake.inflate(seg.y), snake.size, snake.size);
 			});
-
-			ROCK.ARRAY.each(snake.foods, function(food) {
+			
+			snake.foods.forEach(function(food) {
 				snake.ctx.fillStyle = food.color;
 				snake.ctx.fillRect(snake.inflate(food.x), snake.inflate(food.y), snake.size, snake.size);
 			});
 
 			setTimeout(function() {
 				snake.update();
-			}, snake.speed/snake.level);
+			}, snake.speed - (snake.increment * snake.eaten));
 
-		},
-		update: function() {
+		};
+		update() {
 
 			var 
-			seg = ROCK.ARRAY.last(this.segments),
+			seg = this.segments[this.segments.length-1],
 			x = seg.x,
 			y = seg.y;
 
-			if(this.direction === directions.right) {
-				x ++;
-			} 
-			else if(this.direction === directions.left) {
-				x --;
-			} 
-			else if(this.direction === directions.down) {
-				y ++;
-			} 
-			else if(this.direction === directions.up) {
-				y --;
+			switch(this.direction) {
+				case directions.right:
+					x ++;
+				break;
+				case directions.left:
+					x --;
+				break;
+				case directions.down:
+					y ++;
+				break;
+				case directions.up:
+					y --;
+				break;
 			};
 
 			if(this.checkCollision(x, y)) {
-				if(confirm("GAME OVER\nYou scored " + snake.eaten + ". Press OK to try again.")) {
+				if(confirm(`GAME OVER\nYou scored ${snake.eaten}. Press OK to try again.`)) {
 					snake.reset();
 				};
 				return;
@@ -127,8 +117,8 @@
 
 			this.checkFood(x, y);
 
-		},
-		checkCollision: function(x, y) {
+		};
+		checkCollision(x, y) {
 
 			var 
 			collision = false,
@@ -148,13 +138,13 @@
 
 			return collision;
 
-		},
-		checkFood: function(x, y) {
+		};
+		checkFood(x, y) {
 
 			var
 			snake = this;
 
-			ROCK.ARRAY.each(snake.foods, function(food, i) {
+			snake.foods.forEach(function(food, i) {
 
 				if(food.x === x && food.y === y) {
 					
@@ -164,7 +154,7 @@
 					snake.foods.splice(i, 1);
 					snake.updateScore();
 
-					return "break";
+					return 'break';
 					
 				};
 
@@ -172,24 +162,21 @@
 
 			if(snake.foods.length === 0) {
 				
-				snake.level ++;
 				snake.createFoods();
 
 			};
 			
 			snake.move(x, y);
 
-		},
-		createFoods: function() {
+		};
+		createFoods() {
 
-			for(var i = 0; i < this.level; i++) {
-				this.foods.push(new Food(this.getRandomX(), this.getRandomY()));
-			};
+			this.foods.push(new Food(this.getRandomX(), this.getRandomY()));
 
 			return this;
 
-		},
-		move: function(x, y) {
+		};
+		move(x, y) {
 			
 			var 
 			snake = this,
@@ -201,31 +188,10 @@
 
 			snake.draw();
 
-		},
-		rotate: function() {
+		};
+		turn(direction) {
 
-			var
-			direction;
-
-			switch(this.direction) {
-				case directions.right:
-					direction = directions.down;
-				break;
-				case directions.down:
-					direction = directions.left;
-				break;
-				case directions.left:
-					direction = directions.up;
-				break;
-				case directions.up:
-					direction = directions.right;
-				break;
-			};
-
-			return direction;
-
-		},
-		turn: function(direction) {
+			console.log(`snake.turn(${direction})`);
 
 			var 
 			move = false;
@@ -253,64 +219,80 @@
 
 			return move;
 
-		},
-		updateScore: function() {
+		};
+		updateScore() {
 
-			ROCK.DOM.html(this.scoreNode, this.eaten);
+			this.scoreNode.innerHTML = this.eaten;
 			return this;
 
-		},
-		renderTo: function(to) {
+		};
+		renderTo(to) {
 
-			ROCK.DOM.append(this.node, to);
+			to.appendChild(this.node);
 			return this;
 
-		},
-		reset: function() {
+		};
+		reset() {
 
 			location.reload();
 			return this;
 
-		},
-		inflate: function(a) {
+		};
+		inflate(a) {
 			
 			return (a * this.size);
 
-		},
-		deflate: function(a) {
+		};
+		deflate(a) {
 			
 			return (a / this.size);
 
-		},
-		getRandom: function(max) {
+		};
+		getRandom(max) {
 
 			return Math.floor(Math.random() * ((max - this.size) / this.size));
 
-		},
-		getRandomX: function() {
+		};
+		getRandomX() {
 
 			return this.getRandom(this.width);
 
-		},
-		getRandomY: function() {
+		};
+		getRandomY() {
 
 			return this.getRandom(this.height);
 
-		}
-	});
+		};
+	};
 
+	var 
+	body = document.body,
+	snake,
+	swipeThreshold = 30,
+	swipeThresholdInverse = (swipeThreshold*-1),
+	touchX,
+	touchY,
+	directions = {
+		'left': 'ArrowLeft',
+		'up': 'ArrowUp',
+		'right': 'ArrowRight',
+		'down': 'ArrowDown'
+	},
 	snake = new Snake();
+
 	snake.renderTo(body);
 
-	document.addEventListener("keydown", function(e) {
+	document.addEventListener('keydown', function(e) {
 
-		return snake.turn(e.keyCode);
+		console.log(e);
+
+		return snake.turn(e.key);
 
 	});
-	document.addEventListener("touchstart", function(e) {
+	document.addEventListener('touchstart', function(e) {
 
 		var
-		firstTouch = ROCK.ARRAY.first(e.originalEvent.touches);
+		firstTouch = e.originalEvent.touches[0];
 
 		touchX = firstTouch.clientX;
 		touchY = firstTouch.clientY;
@@ -318,10 +300,10 @@
 		return false;
 
 	});
-	document.addEventListener("touchmove", function(e) {
+	document.addEventListener('touchmove', function(e) {
 
 		var
-		firstTouch = ROCK.ARRAY.first(e.originalEvent.changedTouches),
+		firstTouch = e.originalEvent.changedTouches[0],
 		touchXDiff = (firstTouch.clientX - touchX),
 		touchYDiff = (firstTouch.clientY - touchY),
 		direction;
@@ -344,7 +326,7 @@
 		return false;
 
 	});
-	document.addEventListener("touchend", function(e) {
+	document.addEventListener('touchend', function(e) {
 
 		return false;
 
