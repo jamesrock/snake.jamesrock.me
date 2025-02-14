@@ -122,6 +122,8 @@
 		};
 		checkCollision(x, y) {
 
+			// log && console.log(`checkCollision(${x}, ${y})`);
+
 			var 
 			collision = false,
 			snake = this,
@@ -134,7 +136,7 @@
 				};
 			};
 
-			if((x === -1) || (y === -1) || (snake.inflate(x) === snake.width) || (snake.inflate(y) === snake.height)) {
+			if((x === -1) || (y === -1) || (this.inflate(x) === this.width) || (this.inflate(y) === this.height)) {
 				collision = true;
 			};
 
@@ -183,7 +185,7 @@
 		};
 		move(x, y) {
 
-			// console.log(`move(${x}, ${y})`);
+			// log && console.log(`move(${x}, ${y})`);
 			
 			var 
 			snake = this,
@@ -198,7 +200,7 @@
 		};
 		turn(direction) {
 
-			console.log(`snake.turn(${direction})`);
+			// log && console.log(`snake.turn(${direction})`);
 
 			var 
 			move = false;
@@ -255,11 +257,6 @@
 			return (a * this.size);
 
 		};
-		deflate(a) {
-			
-			return (a / this.size);
-
-		};
 		getRandom(max) {
 
 			return Math.floor(Math.random() * ((max - this.size) / this.size));
@@ -274,7 +271,7 @@
 			while(this.checkForSegment(`${x}${y}`)) {
 				x = this.getRandom(this.width);
 				y = this.getRandom(this.height);
-				console.log('segment clash');
+				log && console.log('segment clash');
 			};
 
 			return {
@@ -320,6 +317,7 @@
 	},
 	directionsArray = ['ArrowLeft', 'ArrowUp', 'ArrowRight', 'ArrowDown'],
 	isValidKey = (key) => (directionsArray.some((direction) => (direction===key))),
+	log = true,
 	snake = new Snake();
 
 	snake.renderTo(body);
