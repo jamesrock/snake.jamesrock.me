@@ -55,11 +55,11 @@
 			snake = this,
 			startLength = snake.size;
 
-			for (var i = 0; i < startLength; i++) {
+			for(var i = 0; i < startLength; i++) {
 				snake.segments.push(new Segment(i, 0));
 			};
 
-			snake.createFoods();
+			snake.createFood();
 
 			snake.draw();
 
@@ -162,17 +162,16 @@
 
 			if(snake.foods.length === 0) {
 				
-				snake.createFoods();
+				snake.createFood();
 
 			};
 			
 			snake.move(x, y);
 
 		};
-		createFoods() {
+		createFood() {
 
 			this.foods.push(new Food(this.getRandomX(), this.getRandomY()));
-
 			return this;
 
 		};
