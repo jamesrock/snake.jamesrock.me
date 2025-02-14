@@ -86,7 +86,7 @@
 
 			setTimeout(function() {
 				snake.update();
-			}, snake.speed - (snake.increment * snake.eaten));
+			}, snake.speed - (snake.multiplier * snake.eaten));
 
 		};
 		update() {
@@ -202,31 +202,15 @@
 
 			// log && console.log(`snake.turn(${direction})`);
 
-			var 
-			move = false;
-
 			if(!direction) {
 				return;
 			};
 
-			if((direction === directions.left) && (this.direction != directions.right)) {
-				move = true;
-			}
-			else if((direction === directions.up) && (this.direction != directions.down)) {
-				move = true;
-			}
-			else if((direction === directions.right) && (this.direction != directions.left)) {
-				move = true;
-			}
-			else if((direction === directions.down) && (this.direction != directions.up)) {
-				move = true;
-			};
-
-			if(move) {
+			if((this.direction != opposites[direction])) {
 				this.direction = direction;
 			};
 
-			return move;
+			return this;
 
 		};
 		updateScore() {
@@ -292,10 +276,10 @@
 
 		};
 		width = 350;
-		height = 500;
+		height = 450;
 		size = 10;
 		speed = 300;
-		increment = 5;
+		multiplier = 5;
 		eaten = 0;
 		direction = directions.right;
 		segments = [];
@@ -310,12 +294,24 @@
 	touchX,
 	touchY,
 	directions = {
-		'left': 'ArrowLeft',
-		'up': 'ArrowUp',
-		'right': 'ArrowRight',
-		'down': 'ArrowDown'
+		'left': 'left',
+		'up': 'up',
+		'right': 'right',
+		'down': 'down'
 	},
-	directionsArray = ['ArrowLeft', 'ArrowUp', 'ArrowRight', 'ArrowDown'],
+	directionsKeyMap = {
+		'ArrowLeft': 'left',
+		'ArrowUp': 'up',
+		'ArrowRight': 'right',
+		'ArrowDown': 'down'
+	},
+	opposites = {
+		'left': 'right',
+		'right': 'left',
+		'up': 'down',
+		'down': 'up'
+	},
+	directionsArray = Object.keys(directionsKeyMap),
 	isValidKey = (key) => (directionsArray.some((direction) => (direction===key))),
 	log = true,
 	snake = new Snake();
@@ -325,7 +321,7 @@
 	document.addEventListener('keydown', function(e) {
 			
 		if(isValidKey(e.key)) {
-			return snake.turn(e.key);
+			return snake.turn(directionsKeyMap[e.key]);
 		};
 
 	});
