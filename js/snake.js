@@ -197,7 +197,7 @@
 			move = false;
 
 			if(!direction) {
-				return move;
+				return;
 			};
 
 			if((direction === directions.left) && (this.direction != directions.right)) {
