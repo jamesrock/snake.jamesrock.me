@@ -288,7 +288,6 @@
 
 	var 
 	body = document.body,
-	snake,
 	swipeThreshold = 30,
 	swipeThresholdInverse = (swipeThreshold*-1),
 	touchX,
