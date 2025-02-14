@@ -10,7 +10,7 @@ body {
 
 canvas {
 	display: block;
-	border: solid 2px #CCC;
+	border: solid 4px #CCC;
 	margin: 0 auto;
 	position: relative;
 }
