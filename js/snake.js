@@ -334,7 +334,7 @@
 		touchY = firstTouch.clientY;
 
 		e.preventDefault();
-		return false;
+		e.stopPropagation();
 
 	});
 	document.addEventListener('touchmove', function(e) {
@@ -361,13 +361,13 @@
 		snake.turn(direction);
 
 		e.preventDefault();
-		return false;
+		e.stopPropagation();
 
 	});
 	document.addEventListener('touchend', function(e) {
 
 		e.preventDefault();
-		return false;
+		e.stopPropagation();
 
 	});
 	
