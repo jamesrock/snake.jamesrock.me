@@ -3,6 +3,10 @@
 	margin: 0;
 }
 
+html {
+	overflow: hidden;
+}
+
 body {
 	font-family: monospace;
 	font-size: 18px;
