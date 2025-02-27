@@ -324,22 +324,21 @@
 		};
 
 	});
+	
 	document.addEventListener('touchstart', function(e) {
 
 		var
-		firstTouch = e.originalEvent.touches[0];
+		firstTouch = e.touches[0];
 
 		touchX = firstTouch.clientX;
 		touchY = firstTouch.clientY;
 
-		e.preventDefault();
-		e.stopPropagation();
-
 	});
+	
 	document.addEventListener('touchmove', function(e) {
 
 		var
-		firstTouch = e.originalEvent.changedTouches[0],
+		firstTouch = e.touches[0],
 		touchXDiff = (firstTouch.clientX - touchX),
 		touchYDiff = (firstTouch.clientY - touchY),
 		direction;
@@ -358,15 +357,6 @@
 		};
 
 		snake.turn(direction);
-
-		e.preventDefault();
-		e.stopPropagation();
-
-	});
-	document.addEventListener('touchend', function(e) {
-
-		e.preventDefault();
-		e.stopPropagation();
 
 	});
 	
